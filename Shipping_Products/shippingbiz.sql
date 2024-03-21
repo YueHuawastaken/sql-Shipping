@@ -3,24 +3,24 @@ CREATE DATABASE crm;
 USE crm;
 
 CREATE TABLE Companies (
-    company_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    companyId INT UNSIGNED PRIMARY KEY,
+    companyName VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE ProductType (
-    productType_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    productTypeId INT UNSIGNED PRIMARY KEY,
+    typeName VARCHAR(255) NOT NULL
 );
    
 
 CREATE TABLE Products (
-    Products_id INT AUTO_INCREMENT PRIMARY KEY, 
+    ProductsId INT AUTO_INCREMENT PRIMARY KEY, 
     name VARCHAR (255) NOT NULL,
     price INT UNSIGNED NOT NULL,
-    productType_id INT,
-    company_id INT,
-    FOREIGN KEY (productType_id) REFERENCES ProductType (productType_id),
-    FOREIGN KEY (company_id) REFERENCES Companies(company_id)
+    productTypeId INT UNSIGNED,
+    companyId INT UNSIGNED,
+    FOREIGN KEY (productTypeId) REFERENCES ProductType (productTypeId),
+    FOREIGN KEY (companyId) REFERENCES Companies(companyId)
 );
 
 

@@ -27,6 +27,13 @@ app.get('/', (req,res) => {
     res.send('Hello, World!');
 });
 
+app.get('/shippingProducts', async function (req, res) {
+    let [shippingProducts] = await connection.execute('SELECT Products.*, Companies.companyName, Products.name as productName, ProductType.typeName FROM Products INNER JOIN ProductType ON Products.productTypeId = ProductType.productTypeId JOIN Companies ON Products.companyId = Companies.companyId ORDER BY ProductsId');
+    res.render('index', {
+        'shippingProducts': shippingProducts
+    })
+})
+
 app.listen(3000, ()=>{
     console.log('Server is running')
 });
@@ -39,4 +46,6 @@ main();
 //         'customers': customers
 //     })
 // })
+
+
 
