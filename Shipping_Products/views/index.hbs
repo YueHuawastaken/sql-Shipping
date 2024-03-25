@@ -16,8 +16,11 @@
         <td>{{price}}</td>
         <td>{{typeName}}</td>
         <td>{{companyName}}</td>
+        <td><a href="/shippingProducts/edit/{{ProductsId}}">Edit</a></td>
+        <td><a href="/shippingProducts/delete/{{ProductsId}}">Delete</a></td>
     </tr>
     {{/each}}
+    <td><a href="/shippingProducts/create">Add Products</a></td>
 </table>
 {{/block}}
 {{/extends}}

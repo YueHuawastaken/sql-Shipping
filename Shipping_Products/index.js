@@ -69,6 +69,44 @@ app.get('/shippingProducts/edit/:Products_id', async(req,res)=>{
     })
 })
 
+app.post('/shippingProducts/edit/:Products_id', async(req,res)=>{
+    let {product_name, price, productType_id, company_id} = req.body;
+    let query = 'UPDATE Products SET name = ?, price = ?, productTypeId = ?, companyId = ? WHERE ProductsId = ?';
+    let bindings = [product_name, price, productType_id, company_id, req.params.Products_id];
+    await connection.execute(query, bindings);
+    res.redirect('/shippingProducts');
+})
+
+app.get("/shippingProducts/delete/:Products_id", async function (req,res){
+    const {Products_id} = req.params; // same as `const customerId = req.params.customerId`
+    const query = `SELECT * FROM Products WHERE ProductsId = ?`;
+    
+    // connection.execute with a SELECT statement 
+    // you always get an array as a result even if there ONLY one possible result
+    const [Product] = await connection.execute(query, [Products_id]);
+    const productsToDelete = Product[0];
+
+    res.render('delete', {
+         productsToDelete
+    })
+
+})
+
+app.post('/shippingProducts/delete/:Products_id', async function (req,res){
+    const {Products_id} = req.params;
+
+    // check if the customerId in a relationship with an employee
+    const checkProductId = `SELECT * FROM Products WHERE ProductsId = ?`;
+    // const [involved] = await connection.execute(checkProductId, [Products_id]);
+    if (checkProductId == Products_id) {
+        res.send("Are you sure you want to delete this product ?");
+        return;
+    }
+
+    const query = `DELETE FROM Products WHERE ProductsId = ?`;
+    await connection.execute(query, [Products_id]);
+    res.redirect('/shippingProducts');
+})
 
 
 app.listen(3000, ()=>{

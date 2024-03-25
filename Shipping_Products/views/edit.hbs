@@ -4,11 +4,11 @@
 <form method="POST">
     <div class="mb-3">
         <label>Product Name</label>
-        <input type="text" class="form-control" name="product_name" value="{{product.name}}">>
+        <input type="text" class="form-control" name="product_name" value="{{product.name}}">
     </div>
     <div class="mb-3">
         <label>Price</label>
-        <input type="text" class="form-control" name="price" value="{{product.price}}">>
+        <input type="text" class="form-control" name="price" value="{{product.price}}">
     </div>
     <div class="mb-3">
         <label>Product Type</label>
@@ -28,5 +28,26 @@
     </div>
     <button type="submit" class="btn btn-primary">Edit Product</button>
 </form>
+{{!-- <table class="table">
+    <tr>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Product Type</th>
+        <th>Shipping Company</th>
+    </tr>
+    {{#each Products}}
+    <tr>
+        <td>{{name}}</td>
+        <td>{{price}}</td>
+        <td>{{typeName}}</td>
+        <td>{{companyName}}</td>
+        <td><a href="/shippingProducts/{{ProductsId}}/edit">Edit</a></td>
+    </tr>
+    {{/each}}
+</table> --}}
+
 {{/block}}
 {{/extends}}
+
+
+
