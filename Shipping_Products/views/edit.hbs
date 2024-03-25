@@ -1,0 +1,32 @@
+{{#extends "base"}}
+{{#block "content"}}
+<h1>Add a New Product</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label>Product Name</label>
+        <input type="text" class="form-control" name="product_name" value="{{product.name}}">>
+    </div>
+    <div class="mb-3">
+        <label>Price</label>
+        <input type="text" class="form-control" name="price" value="{{product.price}}">>
+    </div>
+    <div class="mb-3">
+        <label>Product Type</label>
+        <select name="productType_id" class="form-control">
+            {{#each producttypes}}
+            <option value="{{productTypeId}}" {{#eq this.productTypeId ../product.productTypeId}}selected{{/eq}}>{{typeName}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Company</label>
+        <select name="company_id" class="form-control">
+            {{#each companies}}
+            <option value="{{companyId}}"{{#eq this.companyId ../product.companyId}}selected{{/eq}}>{{companyName}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Edit Product</button>
+</form>
+{{/block}}
+{{/extends}}

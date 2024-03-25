@@ -11,6 +11,9 @@ app.use(express.urlencoded({extended:false}));
 
 wax.on(hbs.handlebars);
 wax.setLayoutPath('./views/layouts');
+require('handlebars-helpers')({
+    handlebars: hbs.handlebars
+})
 
 let connection;
 
@@ -33,6 +36,40 @@ app.get('/shippingProducts', async function (req, res) {
         'shippingProducts': shippingProducts
     })
 })
+
+app.get('/shippingProducts/create', async(req,res)=>{
+    let [companies] = await connection.execute('SELECT * from Companies')
+    let [producttypes] = await connection.execute ('SELECT * from ProductType')
+    console.log(companies);
+    res.render('create', {
+        companies,
+        producttypes
+    })
+})
+
+app.post('/shippingProducts/create', async(req,res)=>{
+    let {product_name, price, productType_id, company_id} = req.body;
+    console.log(company_id);
+    let query = 'INSERT INTO Products (name, price, productTypeId, companyId) VALUES (?, ?, ?, ?)';
+    let bindings = [product_name, price, productType_id, company_id];
+    await connection.execute(query, bindings);
+    res.redirect('/shippingProducts');
+})
+
+
+app.get('/shippingProducts/edit/:Products_id', async(req,res)=>{
+    let [products] = await connection.execute('SELECT * from Products WHERE ProductsId = ?', [req.params.Products_id])
+    let [companies] = await connection.execute('SELECT * from Companies')
+    let [producttypes] = await connection.execute ('SELECT * from ProductType')
+    let product = products[0];
+    res.render('edit', {
+        companies,
+        producttypes,
+        product
+    })
+})
+
+
 
 app.listen(3000, ()=>{
     console.log('Server is running')
