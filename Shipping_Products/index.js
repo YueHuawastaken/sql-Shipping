@@ -31,10 +31,51 @@ app.get('/', (req,res) => {
 });
 
 app.get('/shippingProducts', async function (req, res) {
-    let [shippingProducts] = await connection.execute('SELECT Products.*, Companies.companyName, Products.name as productName, ProductType.typeName FROM Products INNER JOIN ProductType ON Products.productTypeId = ProductType.productTypeId JOIN Companies ON Products.companyId = Companies.companyId ORDER BY ProductsId');
+    const {search_term,productType_id,company_id} = req.query; // expression ? code : code
+    let searchquery = `WHERE `;
+    let queryArray = [];
+    if(search_term){
+        queryArray.push(`Products.name LIKE '%${search_term}%'`)
+    }
+    if(productType_id){
+        queryArray.push(`Products.productTypeId = ${productType_id}`)
+    }
+    if(company_id){
+        queryArray.push(`Products.companyId = ${company_id}`)
+    }
+    for(let i = 0; i < queryArray.length; i++)
+    {
+        searchquery = searchquery + queryArray[i];
+        if(i != queryArray.length - 1)
+            searchquery = searchquery + " AND "
+    }
+    console.log(searchquery);
+    let [companies] = await connection.execute('SELECT * from Companies')
+    let [producttypes] = await connection.execute ('SELECT * from ProductType')
+    let [shippingProducts] = !queryArray.length?await connection.execute(`SELECT Products.*, Companies.companyName, Products.name as productName, ProductType.typeName FROM Products 
+    INNER JOIN ProductType ON Products.productTypeId = ProductType.productTypeId JOIN Companies ON Products.companyId = Companies.companyId ORDER BY ProductsId`):
+    await connection.execute(`SELECT Products.*, Companies.companyName, Products.name as productName, ProductType.typeName FROM Products 
+    INNER JOIN ProductType ON Products.productTypeId = ProductType.productTypeId JOIN Companies ON Products.companyId = Companies.companyId ${searchquery} ORDER BY ProductsId`);
     res.render('index', {
-        'shippingProducts': shippingProducts
+        'shippingProducts': shippingProducts,
+        companies,
+        producttypes
     })
+//    const searchTerm = "Sensitive Goods";
+    // check if the customerId in a relationship with an employee
+    // const checkTypeName = `SELECT * FROM productType WHERE typeName = ?`;
+    // // const [involved] = await connection.execute(checkProductId, [Products_id]);
+    // if (checkTypeName == searchTerm) {
+    //     await connection.execute('SELECT Products.*, Companies.companyName, Products.name as productName, ProductType.typeName FROM Products INNER JOIN ProductType ON Products.productTypeId = ProductType.productTypeId JOIN Companies ON Products.companyId = Companies.companyId ORDER BY ProductsId');
+    //     return;
+    // } 
+    // if (search_term === req.query.typeName) {
+    //     query += ` AND typeName LIKE '${req.query.typeName}'`;
+    // }
+ 
+    // if (req.query.companyName) {
+    //   query += ` AND companyName LIKE '%${req.query.companyName}%'`;
+    // }    
 })
 
 app.get('/shippingProducts/create', async(req,res)=>{
@@ -107,6 +148,8 @@ app.post('/shippingProducts/delete/:Products_id', async function (req,res){
     await connection.execute(query, [Products_id]);
     res.redirect('/shippingProducts');
 })
+
+
 
 
 app.listen(3000, ()=>{

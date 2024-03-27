@@ -9,6 +9,23 @@
         <th>Product Type</th>
         <th>Shipping Company</th>
     </tr>
+    <form method="GET">
+        <input type="text" name="search_term" placeholder = "Name">
+        <select name="productType_id" class="form-control">
+            <option value="">Product Type</option>
+            {{#each producttypes}}
+            <option value="{{productTypeId}}">{{typeName}}</option>
+            {{/each}}
+        </select>
+        <select name="company_id" class="form-control">
+            <option value="">Shipping Company</option>
+            {{#each companies}}
+            <option value="{{companyId}}">{{companyName}}</option>
+           
+            {{/each}}
+        </select>
+        <input type="submit" value="Search">
+    </form>
     {{#each shippingProducts}}
     <tr>
         <td>{{ProductsId}}</td>
